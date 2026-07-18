@@ -18,22 +18,20 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 30);
+      setScrolled(window.scrollY > 40);
 
-      const sections = navLinks.map((item) =>
-        document.getElementById(item.id)
-      );
+      const scrollPosition = window.scrollY + 180;
 
-      const scrollPosition = window.scrollY + 150;
+      navLinks.forEach((item) => {
+        const section = document.getElementById(item.id);
 
-      sections.forEach((section) => {
         if (!section) return;
 
         if (
           scrollPosition >= section.offsetTop &&
           scrollPosition < section.offsetTop + section.offsetHeight
         ) {
-          setActive(section.id);
+          setActive(item.id);
         }
       });
     };
@@ -46,84 +44,122 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        scrolled
-          ? "bg-black/60 backdrop-blur-xl border-b border-white/10"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <>
+      <nav
+        className={`fixed left-0 top-0 z-50 w-full transition-all duration-500 ${
+          scrolled
+            ? "bg-black/65 backdrop-blur-2xl border-b border-white/10 shadow-2xl"
+            : "bg-transparent"
+        }`}
+      >
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
 
-        <h1
-          className="text-3xl text-[#D4AF37] font-bold"
-          style={{ fontFamily: "'Playfair Display', serif" }}
-        >
-          Lumière
-        </h1>
+          {/* Logo */}
 
-        <ul className="hidden lg:flex items-center gap-10">
-          {navLinks.map((link) => (
-            <li key={link.id} className="relative">
-              <a
-                href={`#${link.id}`}
-                className={`transition ${
-                  active === link.id
-                    ? "text-[#D4AF37]"
-                    : "text-white hover:text-[#D4AF37]"
-                }`}
-              >
-                {link.name}
-              </a>
+          <a href="#home">
+            <h1
+              className="text-3xl font-bold tracking-wide text-[#D4AF37] transition hover:scale-105"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              Lumière
+            </h1>
+          </a>
 
-              {active === link.id && (
-                <motion.div
-                  layoutId="underline"
-                  className="absolute left-0 -bottom-2 h-[2px] w-full bg-[#D4AF37]"
-                />
-              )}
-            </li>
-          ))}
-        </ul>
+          {/* Desktop Menu */}
 
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="lg:hidden"
-        >
-          {mobileOpen ? (
-            <HiX size={30} />
-          ) : (
-            <HiMenuAlt3 size={30} />
-          )}
-        </button>
-      </div>
+          <ul className="hidden items-center gap-10 lg:flex">
+            {navLinks.map((link) => (
+              <li key={link.id} className="relative">
+
+                <a
+                  href={`#${link.id}`}
+                  className={`font-medium transition duration-300 ${
+                    active === link.id
+                      ? "text-[#D4AF37]"
+                      : "text-white hover:text-[#D4AF37]"
+                  }`}
+                >
+                  {link.name}
+                </a>
+
+                {active === link.id && (
+                  <motion.div
+                    layoutId="underline"
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 30,
+                    }}
+                    className="absolute -bottom-2 left-0 h-[2px] w-full rounded-full bg-[#D4AF37]"
+                  />
+                )}
+              </li>
+            ))}
+          </ul>
+
+          {/* CTA + Mobile Icon */}
+
+          <div className="flex items-center gap-4">
+
+            <a
+              href="#reservation"
+              className="hidden rounded-full bg-[#D4AF37] px-6 py-3 text-sm font-semibold text-black transition duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(212,175,55,0.4)] lg:block"
+            >
+              Book Table
+            </a>
+
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="rounded-xl border border-white/10 bg-white/5 p-2 text-white transition hover:border-[#D4AF37] hover:text-[#D4AF37] lg:hidden"
+            >
+              {mobileOpen ? <HiX size={28} /> : <HiMenuAlt3 size={28} />}
+            </button>
+
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Menu */}
 
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -30 }}
+            initial={{ opacity: 0, y: -60 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            className="lg:hidden bg-[#111]"
+            exit={{ opacity: 0, y: -60 }}
+            transition={{ duration: 0.35 }}
+            className="fixed left-0 top-20 z-40 w-full border-b border-white/10 bg-[#0b0b0b]/95 backdrop-blur-2xl lg:hidden"
           >
-            {navLinks.map((link) => (
+            <div className="flex flex-col px-6 py-6">
+
+              {navLinks.map((link) => (
+                <a
+                  key={link.id}
+                  href={`#${link.id}`}
+                  onClick={() => setMobileOpen(false)}
+                  className={`rounded-xl px-4 py-4 text-lg font-medium transition ${
+                    active === link.id
+                      ? "bg-[#D4AF37]/10 text-[#D4AF37]"
+                      : "text-white hover:bg-white/5 hover:text-[#D4AF37]"
+                  }`}
+                >
+                  {link.name}
+                </a>
+              ))}
+
               <a
-                key={link.id}
-                href={`#${link.id}`}
+                href="#reservation"
                 onClick={() => setMobileOpen(false)}
-                className={`block px-6 py-4 ${
-                  active === link.id
-                    ? "text-[#D4AF37]"
-                    : "text-white"
-                }`}
+                className="mt-6 rounded-full bg-[#D4AF37] py-4 text-center font-semibold text-black transition hover:scale-[1.02]"
               >
-                {link.name}
+                Book a Table
               </a>
-            ))}
+
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
 };
 
