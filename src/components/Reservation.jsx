@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import reservation from "../assets/reservation.jpg"
 
 const Reservation = () => {
   const [formData, setFormData] = useState({
@@ -66,11 +67,9 @@ ${formData.request}`;
       {/* Background */}
 
       <div
-        className="absolute inset-0 bg-cover bg-center bg-fixed"
-        style={{
-          backgroundImage: "url('/reservation.jpg')",
-        }}
-      />
+  className="absolute inset-0 bg-cover bg-center bg-fixed"
+  style={{ backgroundImage: `url(${reservation})` }}
+>       </div>
 
       {/* Overlay */}
 
